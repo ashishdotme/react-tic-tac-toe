@@ -7,7 +7,6 @@ class Board extends Component {
     this.state = {
       PLAYER_ONE: "X",
       PLAYER_TWO: "O",
-      status: "Welcome to Tic Tac Toe",
       squares: Array(9).fill(null)
     };
     this.state.turn = this.state.PLAYER_ONE;
@@ -65,9 +64,22 @@ class Board extends Component {
   }
 
   render() {
+    const winner = this.isGameFinished(this.state.squares);
+    let status = "";
+    if (winner) {
+      status =
+        this.state.turn === this.state.PLAYER_ONE
+          ? "Player 2 won"
+          : "Player 1 won";
+    } else {
+      status =
+        this.state.turn === this.state.PLAYER_ONE
+          ? "Player 1's turn"
+          : "Player 2's turn";
+    }
     return (
       <div>
-        <div className="status">{this.state.status}</div>
+        <div className="status">{status}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
