@@ -5,17 +5,53 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      squares: Array(9).fill("O")
+      PLAYER_ONE: "X",
+      PLAYER_TWO: "O",
+      status: "Welcome to Tic Tac Toe",
+      squares: Array(9).fill(null)
     };
+    this.state.turn = this.state.PLAYER_ONE;
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick(i) {
     const squares = this.state.squares.slice();
-    squares[i] = "X";
-    this.setState(state => ({
-      squares: squares
-    }));
+    if (squares[i] === null && !this.isGameFinished(this.state.squares)) {
+      if (this.state.turn === this.state.PLAYER_ONE) {
+        squares[i] = this.state.PLAYER_ONE;
+        this.setState({ turn: this.state.PLAYER_TWO });
+      } else {
+        squares[i] = this.state.PLAYER_TWO;
+        this.setState({ turn: this.state.PLAYER_ONE });
+      }
+      this.setState(state => ({
+        squares: squares
+      }));
+    }
+  }
+
+  isGameFinished(squareState) {
+    let lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      let [a, b, c] = lines[i];
+      if (
+        squareState[a] &&
+        squareState[a] === squareState[b] &&
+        squareState[a] === squareState[c]
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   renderSquare(i) {
@@ -29,10 +65,9 @@ class Board extends Component {
   }
 
   render() {
-    const status = "Welcome to tic-tac-toe";
     return (
       <div>
-        <div className="status">{status}</div>
+        <div className="status">{this.state.status}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
